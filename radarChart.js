@@ -223,7 +223,7 @@
 	    var force = 0;
 	    var init = 1;
 		
-		// draw the path as different line (each two months represent a line)
+	/*	// draw the path as different line (each two months represent a line)
 	    for (i = 1; i <= counter; ++i) {
 	        temp = data.slice(init - 1, i);
 	        init = i;
@@ -244,9 +244,43 @@
 						})
 						.attr("fill", "none")
 						.style("filter", "url(#glow)");
-	    }
+	    }*/
+var i=1;
+		function myLoop () {           //  create a loop function
+			setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+			
+			//for(var j=0;j<12;j++){
+			temp = data.slice(init - 1, i);
+	        init = i;
+	        force = parseInt(data[i].Date) - 1850;
+			
+			// represent each year with a different color
+			if (mode == 0 )			force=287.5;
+			else if (mode == 1 ) 	force = forces[force].Human;
+			else if (mode == 2 ) 	force = forces[force].Natural;
 
+	        lineGraph	.append("path")
+						.attr("d", radarLine(temp))
+						.attr("stroke", function() {
+							return pathColor(i);
+						})
+	            .		style("stroke-width", function() {
+							return width(force) + "px";
+						})
+						.attr("fill", "none")
+						.style("filter", "url(#glow)");         //  your code here
+				 i++;  
+			//}				 //  increment the counter
+				if (i < counter) {            //  if the counter < 10, call the loop function
+					myLoop();             //  ..  again which will trigger another 
+					}                       //  ..  setTimeout()
+			}, 1)
+			
+		}
+
+		myLoop();   
 	   
+	  
 	    //Taken from http://bl.ocks.org/mbostock/7555321
 	    //Wraps SVG text	
 	    function wrap(text, width) {
