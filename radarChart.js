@@ -160,11 +160,10 @@
 				})
 				.attr("dy", "0.4em")
 				.style("font-size", "20px")
-				.attr("fill", "black")
-
-	    .text(function(d, i) {
-	        return Format(2.5 * d / cfg.levels) - 1;
-	    });
+				.attr("fill", "white")
+				.text(function(d, i) {
+					return Format(2.5 * d / cfg.levels) - 1;
+				});
 
 	    /////////////////////////////////////////////////////////
 	    //////////////////// Draw the axes //////////////////////

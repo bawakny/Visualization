@@ -14,6 +14,10 @@
 	
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	
+	<!-- js files -->
+	<script src="radarChart.js"></script>
+    <script src="colorBar.js"></script>
     <style>
         body {
             font-family: 'Open Sans', sans-serif;
@@ -60,11 +64,12 @@
             <div style=" height: 100%; width: 4%;float:left;padding-top: 1px; font-size: 18px; ">1850</div>
             <div style=" height: 100%; width: 92%; margin-left: auto; margin-right: auto; float:left; " class="colorBar"></div>
             <div style=" height: 100%; width: 4%;float:right;padding-top: 1px; font-size: 18px; ">2016</div>
-
+			
         </div>
-        <script src="radarChart.js"></script>
-        <script src="colorBar.js"></script>
+		<div style="font-size: 13px; margin-top: 15px;">(*) the width of the line depends on the Forces you chose
+				       the wider the line means that the Forces has got bigger through out the years.</div>
         
+    </div>
 		<script>
          var mode=0;
 		 myFunc();
