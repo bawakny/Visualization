@@ -271,10 +271,10 @@ var i=1;
 						.style("filter", "url(#glow)");         //  your code here
 				 i++;  
 			//}				 //  increment the counter
-				if (i < counter) {            //  if the counter < 10, call the loop function
+				if (i =< counter) {            //  if the counter < 10, call the loop function
 					myLoop();             //  ..  again which will trigger another 
 					}                       //  ..  setTimeout()
-			}, 1)
+			}, 5)
 			
 		}
 
