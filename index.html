@@ -19,17 +19,15 @@
             font-family: 'Open Sans', sans-serif;
             font-size: 11px;
             font-weight: 300;
-			
-            fill: white;
+			fill: white;
             text-align: center;
-            
+            color: white;
 			padding: 0px;
 			margin: 0px;
 			position: absolute;
 			background-image:url("body-background.jpg");
 			background-repeat: no-repeat;
 			background-attachment:fixed;
-			
 			background-size:cover;
         }
         .legend {
@@ -80,56 +78,54 @@
 
 		});
 		 
-    function myFunc(){
-		var margin = {
-                    top: 100,
-                    right: 100,
-                    bottom: 100,
-                    left: 100
-                },
-                width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
-                height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+		function myFunc(){
+			var margin = {
+						top: 100,
+						right: 100,
+						bottom: 100,
+						left: 100
+					},
+					width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+					height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
 
 
-            var counter = -1;
-            var force_counter = -1;
-            
-            var color = d3.scale.linear()
-                .range(["#EDC951", "#CC333F", "#00A0B0"]);
+				var counter = -1;
+				var force_counter = -1;
+				
+				// Get the Data of Earth's Temprature and CO2 levels
+				d3.csv("data.csv", function(data) {
+					d3.csv("forcing.csv", function(forces) {
 
-			d3.csv("data.csv", function(data) {
-                d3.csv("forcing.csv", function(forces) {
+						data.forEach(function(d) {
+							counter++;
+							d.Temp = +d.Temp;
+							d.Date = d.Date.split('/');
+							d.Date[0] = +d.Date[0];
+							d.Date[1] = +d.Date[1];
+							d.Date = d.Date[0] + d.Date[1] / 100;
 
-                    data.forEach(function(d) {
-                        counter++;
-                        d.Temp = +d.Temp;
-                        d.Date = d.Date.split('/');
-                        d.Date[0] = +d.Date[0];
-                        d.Date[1] = +d.Date[1];
-                        d.Date = d.Date[0] + d.Date[1] / 100;
+						});
 
-                    });
+						forces.forEach(function(elm) {
+							force_counter++;
+							elm.Year = +elm.Year;
+							elm.Natural = +elm.Natural;
+							elm.Human = +elm.Human;
 
-                    forces.forEach(function(elm) {
-                        force_counter++;
-                        elm.Year = +elm.Year;
-                        elm.Natural = +elm.Natural;
-                        elm.Human = +elm.Human;
-
-                    });
-                    RadarChart(".radarChart", forces, data, radarChartOptions, counter, force_counter,mode);
-                    ColorBar(".colorBar", counter);
-                });
-            });
-            var radarChartOptions = {
-                w: width,
-                h: height,
-                margin: margin,
-                maxValue: 0.5,
-                levels: 5,
-                roundStrokes: true,
-                color: color
-            };
+						});
+						RadarChart(".radarChart", forces, data, radarChartOptions, counter, force_counter,mode);
+						ColorBar(".colorBar", counter);
+					});
+				});
+				var radarChartOptions = {
+					w: width,
+					h: height,
+					margin: margin,
+					maxValue: 0.5,
+					levels: 5,
+					roundStrokes: true
+					
+				};
 			}
         </script>
 </body>

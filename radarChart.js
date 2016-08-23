@@ -56,7 +56,7 @@
 	    } //if
 
 
-
+		// Find the max and min values in both of the data sets
 	    var maxValue = d3.max(data, function(d) {
 	        return d.Temp;
 	    });
@@ -78,32 +78,17 @@
 	        return d.Natural;
 	    });
 
-
-
-	    //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-
-	    //var pathColor = d3.scale.linear()
-	    //	.domain([0,counter]).range(["green","red"]);
-
-	    /*var width = d3.scale.linear()
-	    .domain([human_minValue,counter]).range([0.001,3]);
-	
-	    var width = d3.scale.linear()
-	    .domain([0,human_maxValue]).range([0.001,3]);
-	    */
-	    var width = d3.scale.linear()
-	        .domain([287, 289]).range([0.0001, 5]);
-
-	    var pathColor = d3.scale.linear()
-	        .domain([0, counter])
-	        // .interpolate(d3.interpolateRgb)
-	        .interpolate(d3.interpolateHsl)
-	        //.interpolate(d3.interpolateHcl)
-	        .range(['green', 'red']);
-	    /*var width = d3.scale.linear()
-	    .domain([0,counter]).range([0.01,5]);*/
-	    var opcty = d3.scale.linear()
-	        .domain([0, counter]).range([1, 0.5]);
+		// scale for the width of the line
+	    var width = d3	.scale.linear()
+						.domain([natural_minValue, human_maxValue]).range([0.0001, 4]);
+		// scale for the color of the line
+	    var pathColor = d3	.scale.linear()
+							.domain([0, counter])
+							.interpolate(d3.interpolateHsl)
+							.range(['green', 'red']);
+							
+	    
+	   
 	    var allAxis = (months.map(function(i) {
 	            return i.name
 	        })), //Names of each axis
@@ -117,29 +102,24 @@
 	        .range([0, radius])
 	        .domain([minValue, maxValue]);
 
-	    /////////////////////////////////////////////////////////
-	    //////////// Create the container SVG and g /////////////
-	    /////////////////////////////////////////////////////////
+	    
 
-	    //Remove whatever chart with the same id/class was present before
+	    //Remove whatever chart with the same class was present before
 	    d3.select(id).select("svg").remove();
 
 	    //Initiate the radar chart SVG
-	    var svg = d3.select(id).append("svg")
-	        .style("width", "650px")
-	        .style("height", "650px")
-	        .style("margin-lef", "auto")
-	        .style("margin-right", "auto")
-
-	    .attr("class", "radar" + id);
+	    var svg = d3	.select(id).append("svg")
+						.style("width", "650px")
+						.style("height", "650px")
+						.style("margin-lef", "auto")
+						.style("margin-right", "auto")
+						.attr("class", "radar" + id);
+						
 	    //Append a g element		
-	    var g = svg.append("g")
-	        .attr("transform", "translate(" + 320 + "," + (cfg.h / 2 + cfg.margin.top) + ")");
+	    var g = svg	.append("g")
+					.attr("transform", "translate(" + 320 + "," + (cfg.h / 2 + cfg.margin.top) + ")");
 
-	    /////////////////////////////////////////////////////////
-	    ////////// Glow filter for some extra pizzazz ///////////
-	    /////////////////////////////////////////////////////////
-
+	    
 	    //Filter for the outside glow
 	    var filter = g.append('defs').append('filter').attr('id', 'glow'),
 	        feGaussianBlur = filter.append('feGaussianBlur').attr('stdDeviation', '2.5').attr('result', 'coloredBlur'),
@@ -156,31 +136,31 @@
 
 	    //Draw the background circles
 	    axisGrid.selectAll(".levels")
-	        .data(d3.range(1, (cfg.levels + 1)).reverse())
-	        .enter()
-	        .append("circle")
-	        .attr("class", "gridCircle")
-	        .attr("r", function(d, i) {
-	            return radius / cfg.levels * d;
-	        })
-	        .style("fill", "#CDCDCD")
-	        .style("stroke", "#CDCDCD")
-	        .style("fill-opacity", cfg.opacityCircles)
-	        .style("filter", "url(#glow)");
+				.data(d3.range(1, (cfg.levels + 1)).reverse())
+				.enter()
+				.append("circle")
+				.attr("class", "gridCircle")
+				.attr("r", function(d, i) {
+					return radius / cfg.levels * d;
+				})
+				.style("fill", "#CDCDCD")
+				.style("stroke", "#CDCDCD")
+				.style("fill-opacity", cfg.opacityCircles)
+				.style("filter", "url(#glow)");
 
-	    //Text indicating at what % each level is
+	    //Text indicating at what temprature change each level is
 	    axisGrid.selectAll(".axisLabel")
-	        .data(d3.range(1, (cfg.levels + 1)).reverse())
-	        .enter().append("text")
-	        .attr("class", "axisLabel")
-			.style("fill","white")
-	        .attr("x", 1)
-	        .attr("y", function(d) {
-	            return -d * radius / cfg.levels;
-	        })
-	        .attr("dy", "0.4em")
-	        .style("font-size", "20px")
-	        .attr("fill", "black")
+				.data(d3.range(1, (cfg.levels + 1)).reverse())
+				.enter().append("text")
+				.attr("class", "axisLabel")
+				.style("fill","white")
+				.attr("x", 1)
+				.attr("y", function(d) {
+					return -d * radius / cfg.levels;
+				})
+				.attr("dy", "0.4em")
+				.style("font-size", "20px")
+				.attr("fill", "black")
 
 	    .text(function(d, i) {
 	        return Format(2.5 * d / cfg.levels) - 1;
@@ -227,84 +207,47 @@
 	        })
 	        .call(wrap, cfg.wrapWidth);
 
-	    /////////////////////////////////////////////////////////
-	    ///////////// Draw the radar chart blobs ////////////////
-	    /////////////////////////////////////////////////////////
+	    
 	    //The radial line function
-	    var radarLine = d3.svg.line.radial()
-	        .interpolate("cardinal")
-	        .radius(function(d) {
-	            return rScale(d.Temp);
-	        })
-	        .angle(function(d, i) {
-	            return (d.Date * 100 % 100) * angleSlice;
-	        });
-	    //var ss = 	radarLine(data);
-	    //console.log(ss);
-
-	    if (cfg.roundStrokes) {
-	        radarLine.interpolate("cardinal");
-	    }
-
-
-
+	    var radarLine = d3	.svg.line.radial()
+							.interpolate("cardinal")
+							.radius(function(d) {
+								return rScale(d.Temp);
+							})
+							.angle(function(d, i) {
+								return (d.Date * 100 % 100) * angleSlice;
+							});
+	    
+	    if (cfg.roundStrokes)	        radarLine.interpolate("cardinal");
+	   
 	    var lineGraph = g;
-
-
 	    var force = 0;
 	    var init = 1;
+		
+		// draw the path as different line (each two months represent a line)
 	    for (i = 1; i <= counter; ++i) {
 	        temp = data.slice(init - 1, i);
 	        init = i;
 	        force = parseInt(data[i].Date) - 1850;
-			if (mode == 0 )		force=287.5;
-			else if (mode == 1 ) force = forces[force].Human;
-			else if (mode == 2 ) force = forces[force].Natural;
+			
+			// represent each year with a different color
+			if (mode == 0 )			force=287.5;
+			else if (mode == 1 ) 	force = forces[force].Human;
+			else if (mode == 2 ) 	force = forces[force].Natural;
 
-	        lineGraph.append("path")
-	            .attr("d", radarLine(temp))
-	            .attr("stroke", function() {
-	                return pathColor(i);
-	            })
-	            .style("stroke-width", function() {
-	                return width(force) + "px";
-	            })
-	            .attr("fill", "none")
-	            .style("filter", "url(#glow)");
-	        //.style("opacity" ,  function() {return opcty(i); });
-
-
+	        lineGraph	.append("path")
+						.attr("d", radarLine(temp))
+						.attr("stroke", function() {
+							return pathColor(i);
+						})
+	            .		style("stroke-width", function() {
+							return width(force) + "px";
+						})
+						.attr("fill", "none")
+						.style("filter", "url(#glow)");
 	    }
 
-	    /*
-	    //Create a wrapper for the blobs	
-	    var blobWrapper = g.selectAll(".radarWrapper")
-	    	.data(data)
-	    	.enter().append("g")
-	    	*/
-	    /*	
-		var lineGraph = g
-                              .append("path")
-                           .attr("d", radarLine(data))
-                           .attr("stroke",  pathColor(1500))
-                           .style("stroke-width", cfg.strokeWidth + "px")
-                            .attr("fill", "none")
-                              .style("filter" , "url(#glow)");       
-
-	/*	
-	//Create the outlines	
-	blobWrapper.append("path")
-		.attr("class", "radarStroke")
-		.attr("d", function(d,i) {console.log(rScale(d.Temp));return radarLine(d); })
-		.style("stroke-width", cfg.strokeWidth + "px")
-		.style("stroke", function(d,i) { return cfg.color(i); })
-		.style("fill", "none")
-		.style("filter" , "url(#glow)");	
-	*/
-	    /////////////////////////////////////////////////////////
-	    /////////////////// Helper Function /////////////////////
-	    /////////////////////////////////////////////////////////
-
+	   
 	    //Taken from http://bl.ocks.org/mbostock/7555321
 	    //Wraps SVG text	
 	    function wrap(text, width) {
