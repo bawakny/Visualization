@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Earth's Temprature Radar Chart</title>
+
+    <!-- Google fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+    <!-- D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 300;
+			
+            fill: white;
+            text-align: center;
+            
+			padding: 0px;
+			margin: 0px;
+			position: absolute;
+			background-image:url("body-background.jpg");
+			background-repeat: no-repeat;
+			background-attachment:fixed;
+			
+			background-size:cover;
+        }
+        .legend {
+            font-family: 'Raleway', sans-serif;
+            fill: white;
+			font-size: 12px;
+        }
+        .tooltip {
+            fill: #333333;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrapper" style="width: 95%; margin-left: auto; margin-right: auto;background:rgba(0,0,0,0.55);">
+        <h1  style="padding: 0px; margin-top: 0px; margin-bottom: 30px;color:white; ">Temprature change through the years (1850-2016)</h1>
+		<div class="selectWrapper">
+			<div class="selectText" style="font-size: 15px; color: white; margin-bottom: 15px;">Please select the forces source to see how they affect temprature change</div>
+			<select class="selectThickness">
+			  <option value="0" selected="selected">No Forces</option>
+			  <option value="1">Human Forces</option>
+			  <option value="2">Natural Forces</option>
+			  
+			</select>
+			
+		</div>
+        <div class="radarChart"></div>
+        <div style=" height: 30px; width: 50%; margin-left: auto; margin-right: auto;" class="colorBarWrapper">
+            <div style=" height: 100%; width: 4%;float:left;padding-top: 1px; font-size: 18px; ">1850</div>
+            <div style=" height: 100%; width: 92%; margin-left: auto; margin-right: auto; float:left; " class="colorBar"></div>
+            <div style=" height: 100%; width: 4%;float:right;padding-top: 1px; font-size: 18px; ">2016</div>
+
+        </div>
+        <script src="radarChart.js"></script>
+        <script src="colorBar.js"></script>
+        
+		<script>
+         var mode=0;
+		 myFunc();
+		 $( ".selectThickness" ).change(function() {
+  
+			$( "select option:selected" ).each(function() {
+				mode = $( this ).index();
+				myFunc();
+			});
+   
+
+		});
+		 
+    function myFunc(){
+		var margin = {
+                    top: 100,
+                    right: 100,
+                    bottom: 100,
+                    left: 100
+                },
+                width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+                height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+
+
+            var counter = -1;
+            var force_counter = -1;
+            
+            var color = d3.scale.linear()
+                .range(["#EDC951", "#CC333F", "#00A0B0"]);
+
+			d3.csv("data.csv", function(data) {
+                d3.csv("forcing.csv", function(forces) {
+
+                    data.forEach(function(d) {
+                        counter++;
+                        d.Temp = +d.Temp;
+                        d.Date = d.Date.split('/');
+                        d.Date[0] = +d.Date[0];
+                        d.Date[1] = +d.Date[1];
+                        d.Date = d.Date[0] + d.Date[1] / 100;
+
+                    });
+
+                    forces.forEach(function(elm) {
+                        force_counter++;
+                        elm.Year = +elm.Year;
+                        elm.Natural = +elm.Natural;
+                        elm.Human = +elm.Human;
+
+                    });
+                    RadarChart(".radarChart", forces, data, radarChartOptions, counter, force_counter,mode);
+                    ColorBar(".colorBar", counter);
+                });
+            });
+            var radarChartOptions = {
+                w: width,
+                h: height,
+                margin: margin,
+                maxValue: 0.5,
+                levels: 5,
+                roundStrokes: true,
+                color: color
+            };
+			}
+        </script>
+</body>
+
+</html>
