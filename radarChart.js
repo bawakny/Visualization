@@ -246,6 +246,7 @@
 						.style("filter", "url(#glow)");
 	    }*/
 var i=1;
+var speed = 5;
 		function myLoop () {           //  create a loop function
 			setTimeout(function () {    //  call a 3s setTimeout when the loop is called
 			
@@ -253,7 +254,10 @@ var i=1;
 			temp = data.slice(init - 1, i);
 	        init = i;
 	        force = parseInt(data[i].Date) - 1850;
-			
+			$( ".currYear" ).html(parseInt(data[i].Date) ).css("color", function() {
+																	return pathColor(i);
+															});
+			if (parseInt(data[i].Date) == 1990)		speed = 20;
 			// represent each year with a different color
 			if (mode == 0 )			force=287.5;
 			else if (mode == 1 ) 	force = forces[force].Human;
@@ -274,7 +278,7 @@ var i=1;
 				if (i < counter) {            //  if the counter < 10, call the loop function
 					myLoop();             //  ..  again which will trigger another 
 					}                       //  ..  setTimeout()
-			}, 5)
+			}, speed)
 			
 		}
 
