@@ -253,8 +253,8 @@
 		function myLoop () {           //  create a loop function
 			setTimeout(function () {    //  call a 3s setTimeout when the loop is called
 			
-				//for(var j=0;j<12;j++){
-					i++; 
+				
+				i++; 
 				temp = data.slice(init - 1, i);
 				init = i;
 				force = parseInt(data[i].Date) - 1850;
