@@ -287,8 +287,7 @@
 		}
 
 		myLoop();   
-	   
-	  
+	     
 	    //Taken from http://bl.ocks.org/mbostock/7555321
 	    //Wraps SVG text	
 	    function wrap(text, width) {
