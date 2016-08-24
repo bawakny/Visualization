@@ -265,8 +265,8 @@
 				// represent each year with a different color
 				if (mode == 0 )			force=287.5;
 				else if (mode == 1 ) 	force = forces[force].Human;
-				else if (mode == 2 ) 	force = forces[force].Natural;
-
+				else if (mode == 2 ) 	force = forces[force].Greenhouse;
+				else if (mode == 3 ) 	force = forces[force].Natural;
 				lineGraph	.append("path")
 							.attr("d", radarLine(temp))
 							.attr("stroke", function() {

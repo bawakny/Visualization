@@ -55,7 +55,8 @@
 			<select class="selectThickness">
 			  <option value="0" selected="selected">No Forces</option>
 			  <option value="1">Human Forces</option>
-			  <option value="2">Natural Forces</option>
+			  <option value="2">GreenHouse effect</option>
+			  <option value="3">Natural Forces</option>
 			  
 			</select>
 				<div class="currYear" style="margin-top: 20px; font-size: 35px; color: red; font-weight: bold; "></div>
@@ -78,6 +79,7 @@
   
 			$( "select option:selected" ).each(function() {
 				mode = $( this ).index();
+				
 				myFunc();
 			});
    
@@ -117,6 +119,7 @@
 							elm.Year = +elm.Year;
 							elm.Natural = +elm.Natural;
 							elm.Human = +elm.Human;
+							elm.Greenhouse = +elm.Greenhouse;
 
 						});
 						RadarChart(".radarChart", forces, data, radarChartOptions, counter, force_counter,mode);
